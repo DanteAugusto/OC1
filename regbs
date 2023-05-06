@@ -1,0 +1,56 @@
+#include "systemc.h"
+#include <bitset>
+// wriH $3 50
+//[1101]  [00011]  [0000000000000000]
+// wriL $3 50
+//[1110][00011][0000000000000000]
+SC_MODULE(regbs){
+    sc_in_clk clk;
+    sc_uint<16> regs[32][2];
+    sc_in<sc_uint<4>> opcode;
+    sc_in<sc_uint<5>> op1;
+    sc_in<sc_uint<5>> op2;
+    sc_in<sc_uint<5>> op3;
+    sc_in<sc_uint<16>> value;
+    sc_in<sc_uint<5>> loadpoint;
+    sc_in<sc_uint<16>> load1;
+    sc_in<sc_uint<16>> load2;
+    sc_out<sc_uint<32>> opout1;
+    sc_out<sc_uint<32>> opout2;
+    void save(){
+        if(clk == 0){
+            if(opcode.read() == 0b1101){
+                regs[op1.read()][0] = value.read()
+                //coloca na primeira metade
+            }else{
+                regs[loadpoint.read()][0] = load1.read()
+            }
+            
+            if(opcode.read() == 0b1110){
+                regs[op1.read()][1] = value.read()
+                //coloca na segunda metade
+            }else{
+                regs[loadpoint.read()][1] = load2.read()
+            }
+         
+        }       
+
+    }
+    void get(){
+        if(clck==1){
+            sc_uint<32> x = (regs[op1.read()][0]<<16) + regs[op1.read()][1]
+            sc_uint<32> y = (regs[loadpoint.read()][0]<<16) + regs[loadpoint.read()][1]
+            opout1.write(x);
+            opout2.write(y);
+        }
+            
+    }
+    SC_CTOR(regbs) {
+		SC_METHOD(decode);
+		sensitive << inst;
+        SC_METHOD(registr);
+		sensitive << clk.pos();        
+        SC_METHOD(get);
+		sensitive << clk.pos();
+	}
+};
