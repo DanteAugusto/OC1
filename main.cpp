@@ -4,6 +4,7 @@
 #include "components/register_file.h"
 #include "components/alu.h"
 #include "components/control.h"
+#include "components/bufferIfId.h"
 #include "components/tokenize.h"
 #include <map>
 #include <bitset>
@@ -13,7 +14,7 @@
 //     instruction_memory IM{"IM"};//memoria de instrucao
 //     sc_signal<sc_uint<5>> current;
 //     sc_signal<sc_uint<5>> last;
-//     sc_signal<sc_uint<32>> write_inst;
+//     sc_signal<sc_uint<25>> write_inst;
 //     sc_signal<bool> sigWriteIM;
 //     //registradores
 //     //ULA
@@ -61,9 +62,43 @@ int sc_main(int argc, char* argv[]) {
         {"$30", {1,1,1,1,0}},
         {"$31", {1,1,1,1,1}},
     };
+    //instruction_memory
+    int x = 0;
+    int y = 0;
+    sc_signal<sc_uint<5>> current;
+    current.write(x);
+    sc_signal<sc_uint<5>> last;
+    last.write(y);
     sc_signal<sc_uint<25>> write_inst;
+    sc_signal<bool> sigWriteIM;
+    sigWriteIM.write(true);
+    sc_clock clk("clk", 10, SC_NS);
     instruction_memory im("im");
+    sc_signal<sc_uint<5>> pointPC;
+    sc_signal<sc_uint<32>> dataOut;
+    im.dataOut(dataOut);
+    im.pointPC(pointPC);
+    im.sigWriteIM(sigWriteIM);
     im.write_inst(write_inst);
+    im.current(current);
+    im.last(last);
+    im.clk(clk);
+    
+    //bufferIfId
+    sc_signal<sc_uint<25>> inst;
+    sc_signal<sc_uint<32>> instOut;
+    sc_signal<sc_uint<4>> opcode;
+    sc_signal<sc_uint<5>> rs;
+    sc_signal<sc_uint<5>> rt;
+    sc_signal<sc_uint<5>> rd;
+    bufferIfId bfd("bfd");
+    bfd.inst(inst);
+    bfd.instOut(instOut);
+    bfd.opcode(opcode);
+    bfd.rs(rs);
+    bfd.rt(rt);
+    bfd.rd(rd);
+    bfd.clk(clk);
     // // RF
     // sc_signal<sc_uint<5>> rs, rt, rd;
     // sc_signal<sc_uint<32>> write_data;
@@ -114,7 +149,7 @@ int sc_main(int argc, char* argv[]) {
         // Prompt the user for input
         std::cout << "Enter command (add, sub, and, or, slt, lw, sw, beq, j): ";
         std::getline(std::cin, command);
-        std::cout << command << std::endl;
+        //std::cout << command << std::endl;
         std::vector<std::string> tokens = tokenize(command);
 
         if(tokens[0] == "and"){
@@ -239,44 +274,18 @@ int sc_main(int argc, char* argv[]) {
         while(inst_code.size()<32){
             inst_code.push_back(0);
         }
-
        unsigned int uint_value = 0;
         for (int i = 0; i < 25; i++) {
             uint_value |= (inst_code[i] ? 1 : 0) << (24-i);
         }
         std::cout << "int_value:                  " << std::bitset<25>(uint_value) << std::endl;
         write_inst.write(uint_value);
+        inst.write(uint_value);
         sc_start(10, SC_NS);
 
         std::cout << "inst code:                  " << std::bitset<25>(write_inst.read()) << std::endl;
-        // Map the command to its corresponding opcode
-        // sc_uint<4> opcode1;
-        // std::cout << "opcode1 é: " << opcode1 << endl;
-
-        // // Prompt the user for the two values
-        // std::cout << "Enter value 1: ";
-        // sc_uint<32> value1;
-        // std::cin >> value1;
-
-        // std::cout << "Enter value 2: ";
-        // sc_uint<32> value2;
-        // std::cin >> value2;
-
-        // // Set the inputs to the modules
-        // rs.write(0);
-        // rt.write(1);
-        // write_data.write(value1);
-        // write_enable.write(true);
-        // sc_start(1, SC_NS);
-        // write_data.write(value2);
-        // opcode.write(opcode1);
-
-        // // Wait for the simulation to settle
-        // sc_start(10, SC_NS);
-        // alu_control.write(0);
-        // // Print the result
-        // std::cout << "Result: " << std::hex << result.read() << "\n";
-        // std::cout << "Zero: " << zero.read() << "\n";
+        y++;
+        last.write(y);        
     }
     
     return 0;
