@@ -1,10 +1,14 @@
 #include <systemc.h>
 #include <string>
-#include "components/instruction_memory.h"
-#include "components/register_file.h"
 #include "components/alu.h"
-#include "components/control.h"
+#include "components/bufferExMem.h"
+#include "components/bufferIdEx.h"
 #include "components/bufferIfId.h"
+#include "components/bufferMemWb.h"
+#include "components/datamem.h"
+#include "components/instruction_memory.h"
+#include "components/pc.h"
+#include "components/regbs.h"
 #include "components/tokenize.h"
 #include <map>
 #include <bitset>
@@ -62,86 +66,159 @@ int sc_main(int argc, char* argv[]) {
         {"$30", {1,1,1,1,0}},
         {"$31", {1,1,1,1,1}},
     };
+    
+    //clock
+    sc_clock clk("clk", 10, SC_NS);
+
+
     //instruction_memory
-    int x = 0;
-    int y = 0;
+    int currentint = 0;
+    int lastint = 0;
+
+    //entradas
     sc_signal<sc_uint<5>> current;
-    current.write(x);
+    current.write(currentint);
     sc_signal<sc_uint<5>> last;
-    last.write(y);
-    sc_signal<sc_uint<25>> write_inst;
+    last.write(lastint);
+
+    sc_signal<sc_int<25>> write_inst;
+    
     sc_signal<bool> sigWriteIM;
     sigWriteIM.write(true);
-    sc_clock clk("clk", 10, SC_NS);
+    
+    sc_signal<sc_int<5>> pointPC;
+    sc_signal<sc_int<1>> bubble;
+    bubble.write(false);
+    
+    //saidas
+    sc_signal<sc_int<32>> dataOut; //saida para: bufferIfId
+    sc_signal<sc_int<25>> inst1;
+    sc_signal<sc_int<25>> inst2;
+    sc_signal<sc_int<25>> inst3;
+    sc_signal<sc_int<25>> inst4;
     instruction_memory im("im");
-    sc_signal<sc_uint<5>> pointPC;
-    sc_signal<sc_uint<32>> dataOut;
-    im.dataOut(dataOut);
-    im.pointPC(pointPC);
-    im.sigWriteIM(sigWriteIM);
+    im.clk(clk);
     im.write_inst(write_inst);
     im.current(current);
     im.last(last);
-    im.clk(clk);
+    im.sigWriteIM(sigWriteIM);
+    im.pointPC(pointPC);
+    im.bubble(bubble);
+    im.dataOut(dataOut);
+    im.inst1(inst1);
+    im.inst2(inst2);
+    im.inst3(inst3);
+    im.inst4(inst4);
     
     //bufferIfId
-    sc_signal<sc_uint<25>> inst;
-    sc_signal<sc_uint<32>> instOut;
-    sc_signal<sc_uint<4>> opcode;
-    sc_signal<sc_uint<5>> rs;
-    sc_signal<sc_uint<5>> rt;
-    sc_signal<sc_uint<5>> rd;
+    sc_signal<sc_int<25>> instOut; //saida para: bufferIdEx
+    sc_signal<sc_int<4>> opcode; //saida para: regbs
+    sc_signal<sc_int<5>> rs; //saida para: regbs
+    sc_signal<sc_int<5>> rt; //saida para: regbs
     bufferIfId bfd("bfd");
-    bfd.inst(inst);
+    bfd.inst(dataOut);
     bfd.instOut(instOut);
     bfd.opcode(opcode);
     bfd.rs(rs);
     bfd.rt(rt);
-    bfd.rd(rd);
     bfd.clk(clk);
-    // // RF
-    // sc_signal<sc_uint<5>> rs, rt, rd;
-    // sc_signal<sc_uint<32>> write_data;
-    // sc_signal<sc_uint<32>> read_data_1, read_data_2;
-    // sc_signal<bool> write_enable;
-    // sc_clock clk("clk", 10, SC_NS);
 
-    // register_file rf("rf");
-    // rf.clk(clk);
-    // rf.rs(rs);
-    // rf.rt(rt);
-    // rf.rd(rd);
-    // rf.write_data(write_data);
-    // rf.read_data_1(read_data_1);
-    // rf.read_data_2(read_data_2);
-    // rf.write_enable(write_enable);
+    //regbs
+    sc_signal<sc_int<5>> memoryrequest; //veio do: BufferExMem
+    //misterio na linha abaixo
+    sc_signal<sc_int<4>> ula_opcode; //veio do: alu
+    sc_signal<sc_int<32>> ula_result; //veio do: alu
+    sc_signal<sc_int<5>> posUla; // veio do buffer IdEx
+    sc_signal<sc_int<1>> loadflag; //veio do: BufferMemWb
+    sc_signal<sc_int<5>> loadpoint; //veio do: BufferMemWb
+    sc_signal<sc_int<32>> load; //veio do: BufferMemWb
+    //sc_signal<sc_int<16>> load2; //veio do: BufferMemWb
+    sc_signal<sc_int<32>> opout1; //saída para: bufferIdEx
+    sc_signal<sc_int<32>> opout2; //saída para: bufferIdEx
+    sc_signal<sc_int<32>> memoryget; //saída para: datamem
+    regbs rgbs("rgbs");
+    rgbs.opcode(opcode);
+    rgbs.op1(rs);
+    rgbs.op2(rt);
+    rgbs.ula_opcode(ula_opcode);
+    rgbs.ula_result(ula_result);
+    rgbs.posUla(posUla);
+    rgbs.loadflag(loadflag);
+    rgbs.loadpoint(loadpoint);
+    rgbs.load(load);
+    rgbs.clk(clk);
+    rgbs.memoryget(memoryget);
+    
+    //bufferIdEx
+    sc_signal<sc_int<4>> opcodedx; //saída para: alu
+    sc_signal<sc_int<5>> PCadd; // saída para: PC
+    sc_signal<sc_int<25>> instOutdx; //saída para: bufferExMem
+    sc_signal<sc_int<32>> op1Out; //saída para: alu
+    sc_signal<sc_int<32>> op2Out; //saída para: alu
+    bufferIdEx bdx("bdx");
+    bdx.clk(clk);
+    bdx.inst(instOut);
+    bdx.op1(output1);
+    bdx.op2(output2);
+    bdx.opcode(opcodedx);
+    bdx.PCadd(PCadd);
+    bdx.posresult(posUla);
+    bdx.instOut(instOutdx);
+    bdx.op1Out(op1Out);
+    bdx.op2Out(op2Out);
 
-    // // ALU
-    // sc_signal<sc_uint<32>> op1, op2, result;
-    // sc_signal<sc_uint<4>> alu_control;
-    // sc_signal<bool> zero;
+    //alu
+    sc_signal<sc_int<1>> confirmPC; //saída para: PC
+    alu ula("ula");
+    ula.op1(op1Out);
+    ula.op2(op2Out);
+    ula.opcode(opcodedx);
+    ula.confirmPC(confirmPC);
+    ula.result(ula_result);
 
-    // alu alu("alu");
-    // alu.op1(op1);
-    // alu.op2(op2);
-    // alu.result(result);
-    // alu.alu_control(alu_control);
-    // alu.zero(zero);
+    //bufferExMem
+    sc_signal<sc_int<4>> opcodexm; //saída para: datamem
+    sc_signal<sc_int<4>> instOutxm; //saída para: bufferMemWb
+    sc_out<sc_int<10>> memAddr; //saída para: ??????
+    bufferExMem bxm("bxm");
+    bxm.clk(clk);
+    bxm.inst(instOutdx);
+    bxm.ula_result(ula_result);
+    bxm.memAddr(memAddr);
+    bxm.opcode(opcodexm);
+    bxm.pointerOut(memoryrequest);
+    bxm.instOut(instOutxm);
 
-    // // Control
-    // sc_signal<sc_uint<6>> opcode;
-    // sc_signal<sc_uint<3>> reg_write_enable;
-    // sc_signal<sc_uint<2>> mem_to_reg;
-    // sc_signal<sc_uint<2>> mem_read_write;
-    // sc_signal<bool> jump;
+    //datamem
+    sc_signal<sc_int<32>> memOut;
+    dataMem dm("dm");
+    dm.opcode(opcodexm);
+    dm.memAddr(memAddr);
+    dm.store_value(memoryget);
+    dm.memOut(memOut);
 
-    // control control("control");
-    // control.opcode(opcode);
-    // control.alu_control(alu_control);
-    // control.reg_write_enable(reg_write_enable);
-    // control.mem_to_reg(mem_to_reg);
-    // control.mem_read_write(mem_read_write);
-    // control.jump(jump);
+    //bufferMemWb
+    bufferMemWb bmw("bmw");
+    bmw.clk(clk);
+    bmw.opcode(opcodexm);
+    bmw.pointer(pointerOut);
+    bmw.enable(loadflag);
+    bmw.pointerOut(loadpoint);
+    bmw.wbOut(load);
+
+    //pc
+    sc_signal<sc_int<1>> bubbleOut; //saída para datamem
+    sc_signal<sc_int<5>> pointerOut; //saída para datamem
+    pc PC("PC");
+    PC.clk(clk);
+    PC.isjump(confirmPC);
+    PC.jump(PCadd);
+    PC.inst1(inst1);
+    PC.inst2(inst2);
+    PC.inst3(inst3);
+    PC.inst4(inst4);
+    PC.bubbleOut(bubble);
+    PC.pointerOut(pointPC);
 
     std::string command = "";
     std::vector<bool> inst_code;
@@ -280,12 +357,11 @@ int sc_main(int argc, char* argv[]) {
         }
         std::cout << "int_value:                  " << std::bitset<25>(uint_value) << std::endl;
         write_inst.write(uint_value);
-        inst.write(uint_value);
         sc_start(10, SC_NS);
 
         std::cout << "inst code:                  " << std::bitset<25>(write_inst.read()) << std::endl;
-        y++;
-        last.write(y);        
+        lastint++;
+        last.write(lastint);        
     }
     
     return 0;
