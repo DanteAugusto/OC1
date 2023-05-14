@@ -26,7 +26,7 @@ SC_MODULE(bufferIdEx){
     void spit(){
         if(clk.read() == 1){
             sleep(1);
-            std::cout << "BUFFER IDEX" << std::endl;
+            std::cout << "~~~~ BUFFER IDEX (SAÍDAS)~~~~" << std::endl;
 
             instOut.write(reginst);
             op1Out.write(regop1);
@@ -59,6 +59,7 @@ SC_MODULE(bufferIdEx){
             std::cout << "instrução  " << std::bitset<32>(inst.read()) << std::endl;
             std::cout << "primeiro operando " << std::bitset<32>(op1Out.read()) << std::endl;
             std::cout << "segundo operando " << std::bitset<32>(op2Out.read()) << std::endl;
+            std::cout << std::endl;
             sleep(1);
         }
     }
@@ -67,6 +68,13 @@ SC_MODULE(bufferIdEx){
             reginst = inst.read();
             regop1 = op1.read();
             regop2 = op2.read();
+            sleep(1);
+            std::cout << "~~~~ BUFFER IDEX (ENTRADAS) ~~~~" << std::endl;
+            std::cout << "instrução  " << std::bitset<32>(inst.read()) << std::endl;
+            std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
+            std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
+            std::cout << std::endl;
+            sleep(1);
             //std::cout << "Clock not rising edge detected at " << sc_time_stamp() << std::endl;
             //std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;
         }

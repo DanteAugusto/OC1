@@ -18,10 +18,11 @@ SC_MODULE(bufferIfId){
     void spit(){
         if(clk.read() == 1){
             instOut.write(inst.read());
+            std::cout << "BUFFER IFID (SAÍDA)" << std::endl;
             std::cout << "entra aqui?" << std::endl;
             std::cout << "instOut (dataOut do IM):       " << std::bitset<25>(instOut.read()) << std::endl;
-            
-
+            std::cout << std::endl;
+            sleep(1);
         }
     }
     void registr(){
@@ -32,9 +33,8 @@ SC_MODULE(bufferIfId){
         }
     }
     void decode(){
-        std::cout << "BUFFER IFID" << std::endl;
+        std::cout << "BUFFER IFID (ENTRADA)" << std::endl;
         std::cout << "inst (dataOut do IM):       " << std::bitset<25>(inst.read()) << std::endl;
-        sleep(1);
         std::bitset<25> instruc = std::bitset<25>(inst.read());
         //0001 00100 00011 00010
         int a = 0;
@@ -58,6 +58,8 @@ SC_MODULE(bufferIfId){
         std::cout << "rs:       " << std::bitset<5>(b) << std::endl;
         std::cout << "rt:       " << std::bitset<5>(c) << std::endl;
         // std::cout << "d:       " << std::bitset<5>(d) << std::endl;
+        std::cout << std::endl;
+        sleep(1);
         opcode.write(a);
         rs.write(b);
         rt.write(c);
@@ -66,7 +68,7 @@ SC_MODULE(bufferIfId){
 
     SC_CTOR(bufferIfId) {
 		SC_METHOD(decode);
-		sensitive << inst;
+		sensitive << clk;
         SC_METHOD(registr);
 		sensitive << clk;
         SC_METHOD(spit);

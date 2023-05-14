@@ -34,9 +34,10 @@ SC_MODULE(regbs){
     void save(){
         if(clk.read() == 0){
             sleep(1);
-            std::cout << "/// BASE DE REGISTRADORES ///" << std::endl;
+            std::cout << "/// BASE DE REGISTRADORES (SAÍDAS)///" << std::endl;
             std::cout << "vai atualizar o endereço " << std::bitset<5>(posUla.read()) 
             << " para " << std::bitset<32>(ula_result.read()) << std::endl;
+            std::cout << std::endl;
             sleep(1);
             if(((ula_opcode.read() > 0 && ula_opcode.read() < 8) || opcode.read() == 0b1101 
                     || opcode.read() == 0b1110)){
@@ -55,6 +56,12 @@ SC_MODULE(regbs){
         if(clk.read()==1){
             opout1.write(regs[op1.read()]);
             opout2.write(regs[op2.read()]);
+            sleep(1);
+            std::cout << "/// BASE DE REGISTRADORES (ENTRADAS)///" << std::endl;
+            std::cout << "vai atualizar o endereço " << std::bitset<32>(opout1.read()) << std::endl;
+            std::cout << "vai atualizar o endereço " << std::bitset<32>(opout2.read()) << std::endl;
+            std::cout << std::endl;
+            sleep(1);
         }
             
     }

@@ -187,7 +187,7 @@ int sc_main(int argc, char* argv[]) {
     bufferMemWb bmw("bmw");
     bmw.clk(clk);
     bmw.opcode(opcodexm);
-    bmw.pointer(pointerOut);
+    bmw.pointer(memoryrequest);
     bmw.wb(memOut);
     bmw.enable(loadflag);
     bmw.pointerOut(loadpoint);
