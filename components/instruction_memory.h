@@ -4,7 +4,7 @@
 SC_MODULE(instruction_memory) {
     sc_int<25> inst[32];
 
-    sc_in_clk clk;
+    sc_in<bool> clock;
     sc_in<sc_int<25>> write_inst;
     sc_in<sc_uint<5>> current;
     sc_in<sc_uint<5>> last;
@@ -12,7 +12,7 @@ SC_MODULE(instruction_memory) {
 
     sc_in<sc_int<5>> pointPC;
     sc_in<sc_int<1>> bubble;
-    
+
     sc_out<sc_int<32>> dataOut;
     sc_out<sc_int<25>> inst1;
     sc_out<sc_int<25>> inst2;
@@ -50,7 +50,9 @@ SC_MODULE(instruction_memory) {
         }
         SC_METHOD(inst_put);
         sensitive << write_inst;
-        // SC_METHOD(next_inst);
-        // sensitive << clk.pos();
+        SC_METHOD(next_inst);
+        sensitive << clk;
+        SC_METHOD(out);
+        sensitive << clk;
     }
 };

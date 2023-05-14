@@ -6,7 +6,7 @@
 //[0000]
 //[00000]
 SC_MODULE(bufferIfId){
-    sc_in_clk clk;
+    sc_in<bool> clock;
     sc_in<sc_int<25>> inst;
     sc_int<25> reginst;
     sc_out<sc_int<4>> opcode;
@@ -59,8 +59,8 @@ SC_MODULE(bufferIfId){
 		SC_METHOD(decode);
 		sensitive << inst;
         SC_METHOD(registr);
-		sensitive << clk.pos();
+		sensitive << clk;
         SC_METHOD(spit);
-		sensitive << clk.pos();
+		sensitive << clk;
 	}
 };

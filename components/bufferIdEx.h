@@ -10,8 +10,8 @@ SC_MODULE(bufferIdEx){
     sc_int<25> reginst;
     sc_int<32> regop1;
     sc_int<32> regop2;
-    
-    sc_in_clk clk;
+
+    sc_in<bool> clock;
     sc_in<sc_int<25>> inst;
     sc_in<sc_int<32>> op1;
     sc_in<sc_int<32>> op2;
@@ -30,7 +30,7 @@ SC_MODULE(bufferIdEx){
                 std::bitset<25> instruc = std::bitset<25>(inst);
                 int x = 0;
                 for(int i = 9; i < 25; i++){
-                    value |= (instruc[24-i] ? 1 : 0) << (15-(i-9));        
+                    value |= (instruc[24-i] ? 1 : 0) << (15-(i-9));
                 }
                 x = (x << 16) + x;
                 op2Out.write(x);
@@ -45,10 +45,10 @@ SC_MODULE(bufferIdEx){
             std::bitset<25> instruc = std::bitset<25>(inst);
             //0001 00100 00011 00010
             for(int i = 9; i < 14; i++){
-                y |= (instruc[24-i] ? 1 : 0) << (4-(i-9));        
+                y |= (instruc[24-i] ? 1 : 0) << (4-(i-9));
             }
             for(int i = 14; i < 19; i++){
-                z |= (instruc[24-i] ? 1 : 0) << (4-(i-14));        
+                z |= (instruc[24-i] ? 1 : 0) << (4-(i-14));
             }
             PCadd.write(y);
             posresult.write(z);
@@ -63,12 +63,12 @@ SC_MODULE(bufferIdEx){
             //std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;
         }
     }
-    
+
 
     SC_CTOR(bufferIdEx) {
         SC_METHOD(registr);
-		sensitive << clk.pos();
+		sensitive << clk;
         SC_METHOD(spit);
-		sensitive << clk.pos();
+		sensitive << clk;
 	}
 };

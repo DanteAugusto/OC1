@@ -7,7 +7,7 @@
 //[0000]
 //[00000]
 SC_MODULE(dataMem){
-    sc_in_clk clk;
+    sc_in<bool> clock;
     sc_in<sc_int<4>> opcode;
     sc_in<sc_int<10>> memAddr;
     sc_in<sc_int<32>> store_value;
@@ -32,12 +32,12 @@ SC_MODULE(dataMem){
             //std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;
         }
     }
-    
+
 
     SC_CTOR(dataMem) {
         SC_METHOD(registr);
-		sensitive << clk.pos();
+		sensitive << clk;
         SC_METHOD(spit);
-		sensitive << clk.pos();
+		sensitive << clk;
 	}
 };

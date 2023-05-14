@@ -31,7 +31,7 @@
 //     }
 // };
 
-int sc_main(int argc, char* argv[]) {    
+int sc_main(int argc, char* argv[]) {
     std::map<std::string, std::vector<bool>> m ={
         {"$0", {0,0,0,0,0}},
         {"$1", {0,0,0,0,1}},
@@ -66,9 +66,9 @@ int sc_main(int argc, char* argv[]) {
         {"$30", {1,1,1,1,0}},
         {"$31", {1,1,1,1,1}},
     };
-    
+
     //clock
-    sc_clock clk("clk", 10, SC_NS);
+    sc_signal<bool> clock;
 
 
     //instruction_memory
@@ -82,14 +82,14 @@ int sc_main(int argc, char* argv[]) {
     last.write(lastint);
 
     sc_signal<sc_int<25>> write_inst;
-    
+
     sc_signal<bool> sigWriteIM;
     sigWriteIM.write(true);
-    
+
     sc_signal<sc_int<5>> pointPC;
     sc_signal<sc_int<1>> bubble;
     bubble.write(false);
-    
+
     //saidas
     sc_signal<sc_int<32>> dataOut; //saida para: bufferIfId
     sc_signal<sc_int<25>> inst1;
@@ -109,7 +109,7 @@ int sc_main(int argc, char* argv[]) {
     im.inst2(inst2);
     im.inst3(inst3);
     im.inst4(inst4);
-    
+
     //bufferIfId
     sc_signal<sc_int<25>> instOut; //saida para: bufferIdEx
     sc_signal<sc_int<4>> opcode; //saida para: regbs
@@ -148,7 +148,7 @@ int sc_main(int argc, char* argv[]) {
     rgbs.load(load);
     rgbs.clk(clk);
     rgbs.memoryget(memoryget);
-    
+
     //bufferIdEx
     sc_signal<sc_int<4>> opcodedx; //saída para: alu
     sc_signal<sc_int<5>> PCadd; // saída para: PC
@@ -241,7 +241,7 @@ int sc_main(int argc, char* argv[]) {
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
             inst_code.insert(inst_code.end(),operator2.begin(),operator2.end());
-            
+
         }else if(tokens[0] == "or"){
             inst_code= {0,0,1,0};
             // std::cout << tokens.size() << std::endl;
@@ -254,7 +254,7 @@ int sc_main(int argc, char* argv[]) {
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
             inst_code.insert(inst_code.end(),operator2.begin(),operator2.end());
-            
+
         }else if(tokens[0] == "xor"){
             inst_code= {0,0,1,1};
         // std::cout << tokens.size() << std::endl;
@@ -267,7 +267,7 @@ int sc_main(int argc, char* argv[]) {
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
             inst_code.insert(inst_code.end(),operator2.begin(),operator2.end());
-            
+
         }else if(tokens[0] == "not"){
             inst_code= {0,1,0,0};
         // std::cout << tokens.size() << std::endl;
@@ -277,7 +277,7 @@ int sc_main(int argc, char* argv[]) {
             std::vector<bool> operator1= m[tokens[2]];
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
-            
+
         }else if(tokens[0] == "cmp"){
             inst_code= {0,1,0,1};
         // std::cout << tokens.size() << std::endl;
@@ -290,7 +290,7 @@ int sc_main(int argc, char* argv[]) {
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
             inst_code.insert(inst_code.end(),operator2.begin(),operator2.end());
-            
+
         }else if(tokens[0] == "add"){
             inst_code= {0,1,1,0};
         std::cout << tokens.size() << std::endl;
@@ -303,7 +303,7 @@ int sc_main(int argc, char* argv[]) {
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
             inst_code.insert(inst_code.end(),operator2.begin(),operator2.end());
-            
+
         }else if(tokens[0] == "sub"){
             inst_code= {0,1,1,1};
         // std::cout << tokens.size() << std::endl;
@@ -316,37 +316,51 @@ int sc_main(int argc, char* argv[]) {
             inst_code.insert(inst_code.end(),result.begin(),result.end());
             inst_code.insert(inst_code.end(),operator1.begin(),operator1.end());
             inst_code.insert(inst_code.end(),operator2.begin(),operator2.end());
-            
+
         }else if(tokens[0] == "ld"){
             inst_code= {1,0,0,0};
         // std::cout << tokens.size() << std::endl;
             std::cout << tokens[1] << std::endl;
             std::vector<bool> result= m[tokens[1]];
-            inst_code.insert(inst_code.end(),result.begin(),result.end());            
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
         }else if(tokens[0] == "st"){
             inst_code= {1,0,0,1};
         // std::cout << tokens.size() << std::endl;
             std::cout << tokens[1] << std::endl;
             std::vector<bool> result= m[tokens[1]];
-            inst_code.insert(inst_code.end(),result.begin(),result.end());            
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
         }else if(tokens[0] == "j"){
             inst_code= {1,0,1,0};
         // std::cout << tokens.size() << std::endl;
             std::cout << tokens[1] << std::endl;
             std::vector<bool> result= m[tokens[1]];
-            inst_code.insert(inst_code.end(),result.begin(),result.end());            
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
         }else if(tokens[0] == "jn"){
             inst_code= {1,0,1,1};
         // std::cout << tokens.size() << std::endl;
             std::cout << tokens[1] << std::endl;
             std::vector<bool> result= m[tokens[1]];
-            inst_code.insert(inst_code.end(),result.begin(),result.end());            
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
         }else if(tokens[0] == "jz"){
             inst_code= {1,1,0,0};
         // std::cout << tokens.size() << std::endl;
             std::cout << tokens[1] << std::endl;
             std::vector<bool> result= m[tokens[1]];
-            inst_code.insert(inst_code.end(),result.begin(),result.end());            
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
+        }
+        else if(tokens[0] == "wrih"){
+            inst_code= {1,1,0,1};
+        // std::cout << tokens.size() << std::endl;
+            std::cout << tokens[1] << std::endl;
+            std::vector<bool> result= m[tokens[1]];
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
+        }
+        else if(tokens[0] == "wril"){
+            inst_code= {1,1,1,0};
+        // std::cout << tokens.size() << std::endl;
+            std::cout << tokens[1] << std::endl;
+            std::vector<bool> result= m[tokens[1]];
+            inst_code.insert(inst_code.end(),result.begin(),result.end());
         }
         while(inst_code.size()<32){
             inst_code.push_back(0);
@@ -361,8 +375,8 @@ int sc_main(int argc, char* argv[]) {
 
         std::cout << "inst code:                  " << std::bitset<25>(write_inst.read()) << std::endl;
         lastint++;
-        last.write(lastint);        
+         last.write(lastint);
     }
-    
+
     return 0;
 }
