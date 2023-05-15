@@ -8,20 +8,20 @@
 //[0000]
 //[00000]
 SC_MODULE(bufferIdEx){
-    sc_int<25> reginst;
-    sc_int<32> regop1;
-    sc_int<32> regop2;
+    sc_uint<25> reginst;
+    sc_uint<32> regop1;
+    sc_uint<32> regop2;
     
     sc_in<bool> clk;
-    sc_in<sc_int<25>> inst;
-    sc_in<sc_int<32>> op1;
-    sc_in<sc_int<32>> op2;
+    sc_in<sc_uint<25>> inst;
+    sc_in<sc_uint<32>> op1;
+    sc_in<sc_uint<32>> op2;
     sc_out<sc_uint<4>> opcode;
-    sc_out<sc_int<5>> PCadd;
-    sc_out<sc_int<5>> posresult;
-    sc_out<sc_int<25>> instOut;
-    sc_out<sc_int<32>> op1Out;
-    sc_out<sc_int<32>> op2Out;
+    sc_out<sc_uint<5>> PCadd;
+    sc_out<sc_uint<5>> posresult;
+    sc_out<sc_uint<25>> instOut;
+    sc_out<sc_uint<32>> op1Out;
+    sc_out<sc_uint<32>> op2Out;
 
     void spit(){
         if(clk.read() == 1){

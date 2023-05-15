@@ -9,16 +9,16 @@
 SC_MODULE(bufferMemWb){
     sc_in<bool> clk;
     sc_in<sc_uint<4>> opcode;
-    sc_in<sc_int<5>> pointer;
-    sc_in<sc_int<32>> wb;
+    sc_in<sc_uint<5>> pointer;
+    sc_in<sc_uint<32>> wb;
 
-    sc_int<4> regopcode;
-    sc_int<5> regpointer;
-    sc_int<32> regwb;
+    sc_uint<4> regopcode;
+    sc_uint<5> regpointer;
+    sc_uint<32> regwb;
 
-    sc_out<sc_int<1>> enable;
-    sc_out<sc_int<5>> pointerOut;
-    sc_out<sc_int<32>> wbOut;
+    sc_out<sc_uint<1>> enable;
+    sc_out<sc_uint<5>> pointerOut;
+    sc_out<sc_uint<32>> wbOut;
 
     void spit(){
         if(clk.read() == 1){

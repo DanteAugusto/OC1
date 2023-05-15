@@ -8,12 +8,12 @@
 //[00000]
 SC_MODULE(bufferIfId){
     sc_in<bool> clk;
-    sc_in<sc_int<25>> inst;
+    sc_in<sc_uint<25>> inst;
     sc_int<25> reginst;
     sc_out<sc_uint<4>> opcode;
-    sc_out<sc_int<5>> rs;
-    sc_out<sc_int<5>> rt;
-    sc_out<sc_int<25>> instOut;
+    sc_out<sc_uint<5>> rs;
+    sc_out<sc_uint<5>> rt;
+    sc_out<sc_uint<25>> instOut;
 
     void spit(){
         if(clk.read() == 1){

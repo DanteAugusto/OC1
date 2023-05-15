@@ -8,24 +8,24 @@
 //[1110][00011][0000000000000000]
 SC_MODULE(regbs){
     sc_in<bool> clk;
-    sc_int<32> regs[32];
+    sc_uint<32> regs[32];
     
     sc_in<sc_uint<4>> opcode;
-    sc_in<sc_int<5>> op1;
-    sc_in<sc_int<5>> op2;
-    sc_in<sc_int<5>> memoryrequest;
-    // sc_in<sc_int<5>> op3;
-    // sc_in<sc_int<16>> value;
+    sc_in<sc_uint<5>> op1;
+    sc_in<sc_uint<5>> op2;
+    sc_in<sc_uint<5>> memoryrequest;
+    // sc_in<sc_uint<5>> op3;
+    // sc_in<sc_uint<16>> value;
     sc_in<sc_uint<4>> ula_opcode;
-    sc_in<sc_int<5>> posUla;
-    sc_in<sc_int<32>> ula_result;
-    sc_in<sc_int<1>> loadflag;
-    sc_in<sc_int<5>> loadpoint;
-    sc_in<sc_int<32>> load;
-    // sc_in<sc_int<16>> load;
-    sc_out<sc_int<32>> opout1;
-    sc_out<sc_int<32>> opout2;
-    sc_out<sc_int<32>> memoryget;
+    sc_in<sc_uint<5>> posUla;
+    sc_in<sc_uint<32>> ula_result;
+    sc_in<sc_uint<1>> loadflag;
+    sc_in<sc_uint<5>> loadpoint;
+    sc_in<sc_uint<32>> load;
+    // sc_in<sc_uint<16>> load;
+    sc_out<sc_uint<32>> opout1;
+    sc_out<sc_uint<32>> opout2;
+    sc_out<sc_uint<32>> memoryget;
     void memory(){
         if(clk.read() == 1){
             memoryget.write(regs[memoryrequest.read()]);

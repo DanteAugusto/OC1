@@ -9,11 +9,11 @@
 SC_MODULE(pc){
     sc_in<bool> clk;
     sc_in<sc_uint<1>> isjump;
-    sc_in<sc_int<5>> jump;
-    sc_in<sc_int<25>> inst1;
-    sc_in<sc_int<25>> inst2;
-    sc_in<sc_int<25>> inst3;
-    sc_in<sc_int<25>> inst4;
+    sc_in<sc_uint<5>> jump;
+    sc_in<sc_uint<25>> inst1;
+    sc_in<sc_uint<25>> inst2;
+    sc_in<sc_uint<25>> inst3;
+    sc_in<sc_uint<25>> inst4;
     sc_uint<2> regbubble;
     sc_uint<5> regpointer;
     sc_out<sc_uint<1>> bubbleOut;

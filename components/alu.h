@@ -4,13 +4,13 @@
 #include<unistd.h>
 //[0000][100100][000100]
 SC_MODULE(alu) {
-    sc_in<sc_int<32>> op1;
-    sc_in<sc_int<32>> op2;
+    sc_in<sc_uint<32>> op1;
+    sc_in<sc_uint<32>> op2;
     // sc_in<sc_int<32>> value;
     sc_in<sc_uint<4>> opcode;
     sc_out<sc_uint<1>> confirmPC;
     // sc_out<sc_int<5>> resultPC;
-    sc_out<sc_int<32>> result;
+    sc_out<sc_uint<32>> result;
 
     void compute() {
         confirmPC.write(0);
