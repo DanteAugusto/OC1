@@ -257,7 +257,7 @@ int sc_main(int argc, char* argv[]) {
     test.run(
         "jump if negative - true",
         // GIVEN
-        -111,
+        -123,
         1234,
         11,
         // EXPECT
@@ -316,23 +316,23 @@ int sc_main(int argc, char* argv[]) {
     test.run(
         "wrih",
         // GIVEN
-        0x1234,
-        0xABCD,
+        0x12345678,
+        0xABCDDCBA,
         13,
         // EXPECT
         0,
-        0x12CD
+        0xABCD5678
     );
 
     test.run(
         "wril",
         // GIVEN
-        0x2345,
-        0xBCDE,
+        0x12345678,
+        0xABCDDCBA,
         14,
         // EXPECT
         0,
-        0xBC45
+        0x1234DCBA
     );
 
     return 0;
