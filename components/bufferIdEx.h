@@ -30,22 +30,22 @@ SC_MODULE(bufferIdEx){
 
             instOut.write(reginst);
             op1Out.write(regop1);
-            if(opcode.read() == 13 || opcode.read() == 14){
+            sc_uint<4> opcd = reginst >> 21;
+            opcode.write(opcd);
+            std::cout << "opcode  " << std::bitset<4>(opcode.read()) << std::endl;
+            if(opcd == 13 || opcd == 14){
                 std::bitset<25> instruc = std::bitset<25>(inst.read());
                 unsigned int x = 0;
                 for(int i = 9; i < 25; i++){
                     x |= (instruc[24-i] ? 1 : 0) << (15-(i-9));        
                 }
-                std::cout << "x do write " << x << std::endl;
+                std::cout << "x do write " << std::bitset<16>(x) << std::endl;
                 x = (x << 16) + x;
-                std::cout << "x duplicado do write " << x << std::endl;
+                std::cout << "x duplicado do write " << std::bitset<32>(x) << std::endl;
                 op2Out.write(x);
             }else{
                 op2Out.write(regop2);
             }
-
-            sc_uint<4> x = reginst >> 21;
-            opcode.write(x);
             int y = 0;
             int z = 0;
             std::bitset<25> instruc = std::bitset<25>(inst.read());
@@ -53,12 +53,18 @@ SC_MODULE(bufferIdEx){
             for(int i = 9; i < 14; i++){
                 y |= (instruc[24-i] ? 1 : 0) << (4-(i-9));        
             }
-            for(int i = 14; i < 19; i++){
-                z |= (instruc[24-i] ? 1 : 0) << (4-(i-14));        
+            if(opcd == 13 || opcd == 14){
+                for(int i = 4; i < 9; i++){
+                    z |= (instruc[24-i] ? 1 : 0) << (4-(i-4));        
+                }
+            }else{
+                for(int i = 14; i < 19; i++){
+                    z |= (instruc[24-i] ? 1 : 0) << (4-(i-14));        
+                }
             }
             PCadd.write(y);
             posresult.write(z);
-            std::cout << "instrução  " << std::bitset<25>(inst.read()) << std::endl;
+            std::cout << "instrução  " << std::bitset<25>(reginst) << std::endl;
             //std::cout << "primeiro operando " << std::bitset<32>(op1Out.read()) << std::endl;
             //std::cout << "segundo operando " << std::bitset<32>(op2Out.read()) << std::endl;
             std::cout << std::endl;
@@ -75,7 +81,7 @@ SC_MODULE(bufferIdEx){
             std::cout << "instrução  " << std::bitset<25>(inst.read()) << std::endl;
             std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
             std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
-            std::cout << std::endl;
+            std::cout << std::endl;            
             // sleep(1);
             ////std::cout << "Clock not rising edge detected at " << sc_time_stamp() << std::endl;
             ////std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;

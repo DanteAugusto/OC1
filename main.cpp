@@ -56,7 +56,7 @@ int sc_main(int argc, char* argv[]) {
     //regbs
     sc_signal<sc_uint<5>> memoryrequest; //veio do: BufferExMem
     //misterio na linha abaixo
-    sc_signal<sc_uint<4>> ula_opcode; //veio do: alu
+    // sc_signal<sc_uint<4>> ula_opcode; //veio do: alu
     sc_signal<sc_uint<32>> ula_result; //veio do: alu
     sc_signal<sc_uint<5>> posUla; // veio do buffer IdEx
     sc_signal<sc_uint<1>> loadflag; //veio do: BufferMemWb
@@ -136,7 +136,7 @@ int sc_main(int argc, char* argv[]) {
     rgbs.op1(rs);
     rgbs.op2(rt);
     rgbs.memoryrequest(memoryrequest);
-    rgbs.ula_opcode(ula_opcode);
+    // rgbs.ula_opcode(ula_opcode);
     rgbs.ula_result(ula_result);
     rgbs.posUla(posUla);
     rgbs.loadflag(loadflag);

@@ -26,9 +26,21 @@ SC_MODULE(instruction_memory) {
         // std::cout << "você fez o que deveria?" << std::endl;
         if(!sigWriteIM.read()){
             inst1.write(inst[pointPC.read()]);
-            if(pointPC.read() + 1 > pointPC.read()) inst2.write(inst[pointPC.read() + 1]);
-            if(pointPC.read() + 2 > pointPC.read()) inst3.write(inst[pointPC.read() + 2]);
-            if(pointPC.read() + 3 > pointPC.read()) inst4.write(inst[pointPC.read() + 3]);
+            if(pointPC.read() + 1 > pointPC.read()){
+                inst2.write(inst[pointPC.read() + 1]);
+            }else{
+                inst2.write(0);
+            } 
+            if(pointPC.read() + 2 > pointPC.read()){
+                inst3.write(inst[pointPC.read() + 2]);
+            }else{
+                inst3.write(0);
+            } 
+            if(pointPC.read() + 3 > pointPC.read()){
+                inst4.write(inst[pointPC.read() + 3]);
+            }else{
+                inst4.write(0);
+            } 
         }
     }
 
@@ -36,14 +48,14 @@ SC_MODULE(instruction_memory) {
         // std::cout << "sigWriteIM é " << sigWriteIM.read() << std::endl;
         // std::cout << "bubble é " << bubble.read() << std::endl;
         if(clk.read() == 1){
-            std::cout << "Clock subiu" << std::endl;
+            // std::cout << "Clock subiu" << std::endl;
             // sleep(1);
             std::cout << "ENTRADAS DE INSTRUCTION_MEMORY" << std::endl;
             std::cout << "pointPC: " <<std::bitset<25>(pointPC.read()) << std::endl;
             std::cout << "bubble: " <<std::bitset<25>(bubble.read()) << std::endl;
             // sleep(1);
             if(!bubble.read() && !sigWriteIM.read()){
-                std::cout << "cenoura " << sigWriteIM.read() << std::endl;
+                // std::cout << "cenoura " << sigWriteIM.read() << std::endl;
                 std::cout << "vai enviar a instrução " << std::bitset<25>(inst[pointPC.read()]) << std::endl;
                 // std::cout << "pointPC: " << pointPC.read() <<std::endl;
                 dataOut.write(inst[pointPC.read()]);

@@ -60,7 +60,7 @@ SC_MODULE(bufferIfId){
             //std::cout << "rt:       " << std::bitset<5>(c) << std::endl;
             // //std::cout << "d:       " << std::bitset<5>(d) << std::endl;
             //std::cout << std::endl;
-            sleep(1);
+            // sleep(1);
             opcode.write(a);
             rs.write(b);
             rt.write(c);

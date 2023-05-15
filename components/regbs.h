@@ -10,13 +10,13 @@ SC_MODULE(regbs){
     sc_in<bool> clk;
     sc_uint<32> regs[32];
     
-    sc_in<sc_uint<4>> opcode;
+    // sc_in<sc_uint<4>> opcode;
     sc_in<sc_uint<5>> op1;
     sc_in<sc_uint<5>> op2;
     sc_in<sc_uint<5>> memoryrequest;
     // sc_in<sc_uint<5>> op3;
     // sc_in<sc_uint<16>> value;
-    sc_in<sc_uint<4>> ula_opcode;
+    sc_in<sc_uint<4>> opcode;
     sc_in<sc_uint<5>> posUla;
     sc_in<sc_uint<32>> ula_result;
     sc_in<sc_uint<1>> loadflag;
@@ -35,17 +35,18 @@ SC_MODULE(regbs){
         if(clk.read() == 0){
             sleep(1);
             std::cout << "/// BASE DE REGISTRADORES (SAÍDAS)///" << std::endl;
-            std::cout << "opcode da ULA " << std::bitset<4>(ula_opcode.read()) << std::endl;
+            std::cout << "opcode da ULA " << std::bitset<4>(opcode.read()) << std::endl;
             std::cout << "vai atualizar o endereço " << std::bitset<5>(posUla.read()) << " para " << std::bitset<32>(ula_result.read()) << std::endl;
             std::cout << std::endl;
             sleep(1);
-            if(((ula_opcode.read() > 0 && ula_opcode.read() < 8) || opcode.read() == 0b1101 
-                    || opcode.read() == 0b1110)){
+            if(((opcode.read() > 0 && opcode.read() < 8) || opcode.read() == 13 
+                    || opcode.read() == 14)){
+                std::cout << "TÁ SALVANDO HEIN" << std::endl;
                 regs[posUla.read()] = ula_result.read();
             }
             if(loadflag.read()==1 && 
                (loadpoint.read() != posUla.read() || 
-               !((ula_opcode.read() > 0 && ula_opcode.read() < 8) || opcode.read() == 0b1101 
+               !((opcode.read() > 0 && opcode.read() < 8) || opcode.read() == 0b1101 
                 || opcode.read() == 0b1110))){
                 regs[loadpoint.read()] = load.read();
             }
@@ -56,12 +57,12 @@ SC_MODULE(regbs){
         if(clk.read()==1){
             opout1.write(regs[op1.read()]);
             opout2.write(regs[op2.read()]);
-            // sleep(1);
-            // std::cout << "/// BASE DE REGISTRADORES (ENTRADAS)///" << std::endl;
-            // std::cout << "vai atualizar o endereço " << std::bitset<32>(opout1.read()) << std::endl;
-            // std::cout << "vai atualizar o endereço " << std::bitset<32>(opout2.read()) << std::endl;
-            // std::cout << std::endl;
-            // sleep(1);
+            sleep(1);
+            std::cout << "/// BASE DE REGISTRADORES (ENTRADAS)///" << std::endl;
+            std::cout << "vai atualizar o endereço " << std::bitset<32>(opout1.read()) << std::endl;
+            std::cout << "vai atualizar o endereço " << std::bitset<32>(opout2.read()) << std::endl;
+            std::cout << std::endl;
+            sleep(1);
         }
             
     }

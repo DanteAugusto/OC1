@@ -18,10 +18,13 @@ SC_MODULE(alu) {
         std::cout << "+%$ ULA +%$" << std::endl;
         std::cout << "opcode " << std::bitset<4>(opcode.read()) << std::endl;
         int x = opcode.read();
+        std::cout << "x " << x << std::endl;
         // std::cout << "opcode como um inteiro " << x << std::endl;
         //std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
         //std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
-        if(x == 1){
+        if(x == 0){
+            result.write(0);
+        }else if(x == 1){
             result.write(op1.read() & op2.read());
         }else if(x == 2){
             result.write(op1.read() | op2.read());
@@ -33,6 +36,8 @@ SC_MODULE(alu) {
             result.write(op1.read() == op2.read());
         }else if(x == 6){
             result.write(op1.read() + op2.read());
+            std::cout << "primeira parte antes " << std::bitset<32>(op1.read()) << std::endl;
+            std::cout << "segunda parte antes " << std::bitset<32>(op2.read()) << std::endl;
         }else if(x == 7){
             result.write(op1.read() - op2.read());
         }else if(x == 9){
@@ -41,7 +46,7 @@ SC_MODULE(alu) {
             // std::cout << "DEEEEEEEEEEEEEEZ" << std::endl;
             confirmPC.write(1);
         }else if(x == 11){
-            if(op1.read()< 0){
+            if((sc_int<32>)op1.read()< 0){
                 confirmPC.write(1);
             }
         }else if(x == 12){
@@ -49,24 +54,24 @@ SC_MODULE(alu) {
                 confirmPC.write(1);
             }
         }else if(x == 13){
-            int a = op2.read();
-            int y = op1.read();
+            unsigned int a = op2.read();
+            unsigned int y = op1.read();
             std::cout << "primeira parte antes " << std::bitset<32>(y) << std::endl;
             std::cout << "segunda parte antes " << std::bitset<32>(a) << std::endl;
             a = (a >> 16) << 16;
-            int y0 = (y >> 16) << 16;
+            unsigned int y0 = (y >> 16) << 16;
             y = y - y0;
             std::cout << "primeira parte " << std::bitset<32>(y) << std::endl;
             std::cout << "segunda parte " << std::bitset<32>(a) << std::endl;
             std::cout << "wrih " << std::bitset<32>(a + y) << std::endl;
             result.write(a + y); 
         }else if(x == 14){
-            int z = op1.read();
-            int w = op2.read();
+            unsigned int z = op1.read();
+            unsigned int w = op2.read();
             std::cout << "primeira parte antes " << std::bitset<32>(z) << std::endl;
             std::cout << "segunda parte antes " << std::bitset<32>(w) << std::endl;
             z = (z >> 16) << 16;
-            int w0 = (w >> 16) << 16;
+            unsigned int w0 = (w >> 16) << 16;
             w = w - w0;
             std::cout << "primeira parte " << std::bitset<32>(z) << std::endl;
             std::cout << "segunda parte " << std::bitset<32>(w) << std::endl;
