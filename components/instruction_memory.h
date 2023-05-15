@@ -7,7 +7,7 @@ SC_MODULE(instruction_memory) {
     sc_uint<5> last;
 
     sc_in<bool> clk;
-    sc_in<sc_int<25>> write_inst;
+    sc_in<sc_uint<25>> write_inst;
     sc_in<bool> sigWriteIM;
 
     sc_in<sc_uint<5>> pointPC;
@@ -37,11 +37,11 @@ SC_MODULE(instruction_memory) {
         // std::cout << "bubble é " << bubble.read() << std::endl;
         if(clk.read() == 1){
             std::cout << "Clock subiu" << std::endl;
-            sleep(1);
+            // sleep(1);
             std::cout << "ENTRADAS DE INSTRUCTION_MEMORY" << std::endl;
             std::cout << "pointPC: " <<std::bitset<25>(pointPC.read()) << std::endl;
             std::cout << "bubble: " <<std::bitset<25>(bubble.read()) << std::endl;
-            sleep(1);
+            // sleep(1);
             if(!bubble.read() && !sigWriteIM.read()){
                 std::cout << "cenoura " << sigWriteIM.read() << std::endl;
                 std::cout << "vai enviar a instrução " << std::bitset<25>(inst[pointPC.read()]) << std::endl;

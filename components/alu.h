@@ -14,7 +14,7 @@ SC_MODULE(alu) {
 
     void compute() {
         confirmPC.write(0);
-        sleep(1);
+        // sleep(1);
         std::cout << "+%$ ULA +%$" << std::endl;
         std::cout << "opcode " << std::bitset<4>(opcode.read()) << std::endl;
         int x = opcode.read();
@@ -50,18 +50,26 @@ SC_MODULE(alu) {
             }
         }else if(x == 13){
             int a = op2.read();
-            a = (a >> 16) << 16;
             int y = op1.read();
+            std::cout << "primeira parte antes " << std::bitset<32>(y) << std::endl;
+            std::cout << "segunda parte antes " << std::bitset<32>(a) << std::endl;
+            a = (a >> 16) << 16;
             int y0 = (y >> 16) << 16;
             y = y - y0;
+            std::cout << "primeira parte " << std::bitset<32>(y) << std::endl;
+            std::cout << "segunda parte " << std::bitset<32>(a) << std::endl;
             std::cout << "wrih " << std::bitset<32>(a + y) << std::endl;
             result.write(a + y); 
         }else if(x == 14){
             int z = op1.read();
-            z = (z >> 16) << 16;
             int w = op2.read();
+            std::cout << "primeira parte antes " << std::bitset<32>(z) << std::endl;
+            std::cout << "segunda parte antes " << std::bitset<32>(w) << std::endl;
+            z = (z >> 16) << 16;
             int w0 = (w >> 16) << 16;
             w = w - w0;
+            std::cout << "primeira parte " << std::bitset<32>(z) << std::endl;
+            std::cout << "segunda parte " << std::bitset<32>(w) << std::endl;
             std::cout << "wril " << std::bitset<32>(z + w) << std::endl;
             result.write(z + w); 
         }

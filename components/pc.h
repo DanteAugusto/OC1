@@ -29,11 +29,11 @@ SC_MODULE(pc){
     }
     void jumps(){
         if(clk.read() == 1){
-            sleep(1);
-            std::cout << "jumps " << std::endl;
-            std::cout << "é jump? " << isjump.read() << std::endl;
+            // sleep(1);
+            // std::cout << "jumps " << std::endl;
+            // std::cout << "é jump? " << isjump.read() << std::endl;
             if(isjump.read() == 1){
-                std:cout << "é jump!" << std::endl;
+                // std:cout << "é jump!" << std::endl;
                 std::bitset<25> instruc = std::bitset<25>(inst1.read());
                 //0001001000001100010            
                 // ld pointerOut memAddr
@@ -56,9 +56,9 @@ SC_MODULE(pc){
 
     void hazards(){
         if(clk.read() == 1){
-            sleep(1);
-            std::cout << "hazards " << std::endl;
-            std::cout << "é jump? " << isjump.read() << std::endl;
+            // sleep(1);
+            // std::cout << "hazards " << std::endl;
+            // std::cout << "é jump? " << isjump.read() << std::endl;
             if(regbubble == 0 && isjump.read() == 0){
                 // std::cout << "regbuuble e isjump são falsos?" << std::endl;
                 std::bitset<25> instruc = std::bitset<25>(inst1.read());
@@ -186,13 +186,13 @@ SC_MODULE(pc){
                 }
                 // std::cout << "depois do incremento: " << regpointer <<std::endl;
             }else{
-                std::cout << "é jump! " << isjump.read() << std::endl;
+                // std::cout << "é jump! " << isjump.read() << std::endl;
                 bubbleOut.write(1);
                 if(regbubble > 0){
                     // std::cout << "------------------------> o bubble é "<<regbubble << std::endl;
                     regbubble = regbubble - 1;
                 }
-                sleep(5);
+                // sleep(5);
             }
             if(isjump.read() == 0)bubbleOut.write(0);
             

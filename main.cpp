@@ -50,27 +50,27 @@ int sc_main(int argc, char* argv[]) {
         {"$30", {1,1,1,1,0}},
         {"$31", {1,1,1,1,1}},
     };
-    sc_signal<sc_int<1>> bubbleOut; //saída para datamem
-    sc_signal<sc_int<5>> pointerOut; //saída para datamem
+    sc_signal<sc_uint<1>> bubbleOut; //saída para datamem
+    sc_signal<sc_uint<5>> pointerOut; //saída para datamem
     
     //regbs
-    sc_signal<sc_int<5>> memoryrequest; //veio do: BufferExMem
+    sc_signal<sc_uint<5>> memoryrequest; //veio do: BufferExMem
     //misterio na linha abaixo
     sc_signal<sc_uint<4>> ula_opcode; //veio do: alu
-    sc_signal<sc_int<32>> ula_result; //veio do: alu
-    sc_signal<sc_int<5>> posUla; // veio do buffer IdEx
-    sc_signal<sc_int<1>> loadflag; //veio do: BufferMemWb
-    sc_signal<sc_int<5>> loadpoint; //veio do: BufferMemWb
-    sc_signal<sc_int<32>> load; //veio do: BufferMemWb
-    //sc_signal<sc_int<16>> load2; //veio do: BufferMemWb
-    sc_signal<sc_int<32>> opout1; //saída para: bufferIdEx
-    sc_signal<sc_int<32>> opout2; //saída para: bufferIdEx
-    sc_signal<sc_int<32>> memoryget; //saída para: datamem
+    sc_signal<sc_uint<32>> ula_result; //veio do: alu
+    sc_signal<sc_uint<5>> posUla; // veio do buffer IdEx
+    sc_signal<sc_uint<1>> loadflag; //veio do: BufferMemWb
+    sc_signal<sc_uint<5>> loadpoint; //veio do: BufferMemWb
+    sc_signal<sc_uint<32>> load; //veio do: BufferMemWb
+    //sc_signal<sc_uint<16>> load2; //veio do: BufferMemWb
+    sc_signal<sc_uint<32>> opout1; //saída para: bufferIdEx
+    sc_signal<sc_uint<32>> opout2; //saída para: bufferIdEx
+    sc_signal<sc_uint<32>> memoryget; //saída para: datamem
     //clock
     sc_signal<bool> clk;
     clk = 1;
 
-    sc_signal<sc_int<25>> write_inst;
+    sc_signal<sc_uint<25>> write_inst;
     
     sc_signal<bool> sigWriteIM;
     sigWriteIM.write(true);
@@ -81,34 +81,34 @@ int sc_main(int argc, char* argv[]) {
     bubble.write(0);
     //instruction_memory
 
-    sc_signal<sc_int<25>> dataOut; //saida para: bufferIfId
-    sc_signal<sc_int<25>> inst1;
-    sc_signal<sc_int<25>> inst2;
-    sc_signal<sc_int<25>> inst3;
-    sc_signal<sc_int<25>> inst4;
+    sc_signal<sc_uint<25>> dataOut; //saida para: bufferIfId
+    sc_signal<sc_uint<25>> inst1;
+    sc_signal<sc_uint<25>> inst2;
+    sc_signal<sc_uint<25>> inst3;
+    sc_signal<sc_uint<25>> inst4;
     
     //bufferIfId
-    sc_signal<sc_int<25>> instOut; //saida para: bufferIdEx
+    sc_signal<sc_uint<25>> instOut; //saida para: bufferIdEx
     sc_signal<sc_uint<4>> opcode; //saida para: regbs
-    sc_signal<sc_int<5>> rs; //saida para: regbs
-    sc_signal<sc_int<5>> rt; //saida para: regbs
+    sc_signal<sc_uint<5>> rs; //saida para: regbs
+    sc_signal<sc_uint<5>> rt; //saida para: regbs
 
     //bufferIdEx
     sc_signal<sc_uint<4>> opcodedx; //saída para: alu
-    sc_signal<sc_int<32>> op2Out; //saída para: alu
-    sc_signal<sc_int<5>> PCadd; // saída para: PC
-    sc_signal<sc_int<25>> instOutdx; //saída para: bufferExMem
-    sc_signal<sc_int<32>> op1Out; //saída para: alu
+    sc_signal<sc_uint<32>> op2Out; //saída para: alu
+    sc_signal<sc_uint<5>> PCadd; // saída para: PC
+    sc_signal<sc_uint<25>> instOutdx; //saída para: bufferExMem
+    sc_signal<sc_uint<32>> op1Out; //saída para: alu
 
     //alu
     sc_signal<sc_uint<1>> confirmPC; //saída para: PC
     sc_signal<sc_uint<4>> opcodexm; //saída para: datamem
-    sc_signal<sc_int<25>> instOutxm; //saída para: bufferMemWb
-    sc_signal<sc_int<10>> memAddr; //saída para: ??????
+    sc_signal<sc_uint<25>> instOutxm; //saída para: bufferMemWb
+    sc_signal<sc_uint<10>> memAddr; //saída para: ??????
     // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
     
     //datamem
-    sc_signal<sc_int<32>> memOut;
+    sc_signal<sc_uint<32>> memOut;
     
 
     instruction_memory im("im");
@@ -379,7 +379,7 @@ int sc_main(int argc, char* argv[]) {
             std::cout << "Clock tá em 1" << std::endl;
             sc_start(1, SC_NS);
                 numberCycles++;
-                sleep(1);
+                // sleep(1);
             }
         }
         // std::cout << "inst code:                  " << std::bitset<25>(write_inst.read()) << std::endl;
@@ -396,7 +396,7 @@ int sc_main(int argc, char* argv[]) {
             clk = 1;
             std::cout << "Clock tá em 1" << std::endl;
             sc_start(1, SC_NS);
-            sleep(1);
+            // sleep(1);
 	    }
     }
     return 0;

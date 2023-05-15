@@ -36,7 +36,9 @@ SC_MODULE(bufferIdEx){
                 for(int i = 9; i < 25; i++){
                     x |= (instruc[24-i] ? 1 : 0) << (15-(i-9));        
                 }
+                std::cout << "x do write " << x << std::endl;
                 x = (x << 16) + x;
+                std::cout << "x duplicado do write " << x << std::endl;
                 op2Out.write(x);
             }else{
                 op2Out.write(regop2);
@@ -60,7 +62,7 @@ SC_MODULE(bufferIdEx){
             //std::cout << "primeiro operando " << std::bitset<32>(op1Out.read()) << std::endl;
             //std::cout << "segundo operando " << std::bitset<32>(op2Out.read()) << std::endl;
             std::cout << std::endl;
-            sleep(1);
+            // sleep(1);
         }
     }
     void registr(){
@@ -68,13 +70,13 @@ SC_MODULE(bufferIdEx){
             reginst = inst.read();
             regop1 = op1.read();
             regop2 = op2.read();
-            sleep(1);
+            // sleep(1);
             std::cout << "~~~~ BUFFER IDEX (ENTRADAS) ~~~~" << std::endl;
             std::cout << "instrução  " << std::bitset<25>(inst.read()) << std::endl;
-            //std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
-            //std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
+            std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
+            std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
             std::cout << std::endl;
-            sleep(1);
+            // sleep(1);
             ////std::cout << "Clock not rising edge detected at " << sc_time_stamp() << std::endl;
             ////std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;
         }
