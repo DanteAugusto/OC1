@@ -15,7 +15,7 @@ SC_MODULE(bufferExMem){
     sc_int<25> regula_result;
     
     sc_out<sc_int<10>> memAddr;
-    sc_out<sc_int<4>> opcode;
+    sc_out<sc_uint<4>> opcode;
     sc_out<sc_int<5>> pointerOut;
     sc_out<sc_int<25>> instOut;
 
@@ -23,7 +23,7 @@ SC_MODULE(bufferExMem){
     void spit(){
         if(clk.read() == 1){
             instOut.write(reginst);            
-            sc_int<4> x = reginst >> 21;
+            sc_uint<4> x = reginst >> 21;
             opcode.write(x);
             int y = 0;
             int z = 0;

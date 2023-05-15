@@ -56,7 +56,7 @@ int sc_main(int argc, char* argv[]) {
     //regbs
     sc_signal<sc_int<5>> memoryrequest; //veio do: BufferExMem
     //misterio na linha abaixo
-    sc_signal<sc_int<4>> ula_opcode; //veio do: alu
+    sc_signal<sc_uint<4>> ula_opcode; //veio do: alu
     sc_signal<sc_int<32>> ula_result; //veio do: alu
     sc_signal<sc_int<5>> posUla; // veio do buffer IdEx
     sc_signal<sc_int<1>> loadflag; //veio do: BufferMemWb
@@ -89,20 +89,20 @@ int sc_main(int argc, char* argv[]) {
     
     //bufferIfId
     sc_signal<sc_int<25>> instOut; //saida para: bufferIdEx
-    sc_signal<sc_int<4>> opcode; //saida para: regbs
+    sc_signal<sc_uint<4>> opcode; //saida para: regbs
     sc_signal<sc_int<5>> rs; //saida para: regbs
     sc_signal<sc_int<5>> rt; //saida para: regbs
 
     //bufferIdEx
-    sc_signal<sc_int<4>> opcodedx; //saída para: alu
+    sc_signal<sc_uint<4>> opcodedx; //saída para: alu
     sc_signal<sc_int<32>> op2Out; //saída para: alu
     sc_signal<sc_int<5>> PCadd; // saída para: PC
     sc_signal<sc_int<25>> instOutdx; //saída para: bufferExMem
     sc_signal<sc_int<32>> op1Out; //saída para: alu
 
     //alu
-    sc_signal<sc_int<1>> confirmPC; //saída para: PC
-    sc_signal<sc_int<4>> opcodexm; //saída para: datamem
+    sc_signal<sc_uint<1>> confirmPC; //saída para: PC
+    sc_signal<sc_uint<4>> opcodexm; //saída para: datamem
     sc_signal<sc_int<25>> instOutxm; //saída para: bufferMemWb
     sc_signal<sc_int<10>> memAddr; //saída para: ??????
     // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << std::endl;
@@ -371,11 +371,13 @@ int sc_main(int argc, char* argv[]) {
         if(command != "0"){
             write_inst.write(uint_value);
             int numberCycles = 0;
-            while (numberCycles != 2) {
+            while (numberCycles != 1) {
                 clk = 0;
-                sc_start(1, SC_NS);
-                clk = 1;
-                sc_start(1, SC_NS);
+            std::cout << "Clock tá em 0" << std::endl;
+            sc_start(1, SC_NS);
+            clk = 1;
+            std::cout << "Clock tá em 1" << std::endl;
+            sc_start(1, SC_NS);
                 numberCycles++;
                 sleep(1);
             }
@@ -389,8 +391,10 @@ int sc_main(int argc, char* argv[]) {
         std::cout << "----- TODAS AS INSTRUÇÕES FORAM LIDAS -----" << std::endl;
         while (true) {
             clk = 0;
+            std::cout << "Clock tá em 0" << std::endl;
             sc_start(1, SC_NS);
             clk = 1;
+            std::cout << "Clock tá em 1" << std::endl;
             sc_start(1, SC_NS);
             sleep(1);
 	    }

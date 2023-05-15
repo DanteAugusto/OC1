@@ -10,7 +10,7 @@ SC_MODULE(bufferIfId){
     sc_in<bool> clk;
     sc_in<sc_int<25>> inst;
     sc_int<25> reginst;
-    sc_out<sc_int<4>> opcode;
+    sc_out<sc_uint<4>> opcode;
     sc_out<sc_int<5>> rs;
     sc_out<sc_int<5>> rt;
     sc_out<sc_int<25>> instOut;
@@ -18,51 +18,53 @@ SC_MODULE(bufferIfId){
     void spit(){
         if(clk.read() == 1){
             instOut.write(inst.read());
-            std::cout << "BUFFER IFID (SAÍDA)" << std::endl;
-            std::cout << "entra aqui?" << std::endl;
-            std::cout << "instOut (dataOut do IM):       " << std::bitset<25>(instOut.read()) << std::endl;
-            std::cout << std::endl;
+            //std::cout << "BUFFER IFID (SAÍDA)" << std::endl;
+            //std::cout << "entra aqui?" << std::endl;
+            //std::cout << "instOut (dataOut do IM):       " << std::bitset<25>(instOut.read()) << std::endl;
+            //std::cout << std::endl;
             sleep(1);
         }
     }
     void registr(){
         if(clk.read() == 0){
             reginst = inst.read();
-            //std::cout << "Clock not rising edge detected at " << sc_time_stamp() << std::endl;
-            //std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;
+            ////std::cout << "Clock not rising edge detected at " << sc_time_stamp() << std::endl;
+            ////std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;
         }
     }
     void decode(){
-        std::cout << "BUFFER IFID (ENTRADA)" << std::endl;
-        std::cout << "inst (dataOut do IM):       " << std::bitset<25>(inst.read()) << std::endl;
-        std::bitset<25> instruc = std::bitset<25>(inst.read());
-        //0001 00100 00011 00010
-        int a = 0;
-        int b = 0;
-        int c = 0;
-        int d = 0;
-        for(int i = 0; i < 25; i++){
-          //  std:: cout  <<instruc[24-i];
-            if(i < 4){
-                a |= (instruc[24-i] ? 1 : 0) << (3-i);
-            } else if(i >= 4 && i < 9){
-                b |= (instruc[24-i] ? 1 : 0) << (4-(i-4));
-            }else if(i >= 9 && i < 14){
-                c |= (instruc[24-i] ? 1 : 0) << (4-(i-9));
-            }else if(i >= 14 && i < 25){
-                d |= (instruc[24-i] ? 1 : 0) << (4-(i-14));
+        if(clk == 1){
+            //std::cout << "BUFFER IFID (ENTRADA)" << std::endl;
+            //std::cout << "inst (dataOut do IM):       " << std::bitset<25>(inst.read()) << std::endl;
+            std::bitset<25> instruc = std::bitset<25>(inst.read());
+            //0001 00100 00011 00010
+            int a = 0;
+            int b = 0;
+            int c = 0;
+            int d = 0;
+            for(int i = 0; i < 25; i++){
+            //  std:: cout  <<instruc[24-i];
+                if(i < 4){
+                    a |= (instruc[24-i] ? 1 : 0) << (3-i);
+                } else if(i >= 4 && i < 9){
+                    b |= (instruc[24-i] ? 1 : 0) << (4-(i-4));
+                }else if(i >= 9 && i < 14){
+                    c |= (instruc[24-i] ? 1 : 0) << (4-(i-9));
+                }else if(i >= 14 && i < 25){
+                    d |= (instruc[24-i] ? 1 : 0) << (4-(i-14));
+                }
             }
+            ////std::cout << std::endl;
+            //std::cout << "opcode:       " << std::bitset<4>(a) << std::endl;
+            //std::cout << "rs:       " << std::bitset<5>(b) << std::endl;
+            //std::cout << "rt:       " << std::bitset<5>(c) << std::endl;
+            // //std::cout << "d:       " << std::bitset<5>(d) << std::endl;
+            //std::cout << std::endl;
+            sleep(1);
+            opcode.write(a);
+            rs.write(b);
+            rt.write(c);
         }
-        //std::cout << std::endl;
-        std::cout << "opcode:       " << std::bitset<4>(a) << std::endl;
-        std::cout << "rs:       " << std::bitset<5>(b) << std::endl;
-        std::cout << "rt:       " << std::bitset<5>(c) << std::endl;
-        // std::cout << "d:       " << std::bitset<5>(d) << std::endl;
-        std::cout << std::endl;
-        sleep(1);
-        opcode.write(a);
-        rs.write(b);
-        rt.write(c);
     }
 
 

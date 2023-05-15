@@ -8,7 +8,7 @@
 //[00000]
 SC_MODULE(bufferMemWb){
     sc_in<bool> clk;
-    sc_in<sc_int<4>> opcode;
+    sc_in<sc_uint<4>> opcode;
     sc_in<sc_int<5>> pointer;
     sc_in<sc_int<32>> wb;
 

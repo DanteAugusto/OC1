@@ -7,18 +7,20 @@ SC_MODULE(alu) {
     sc_in<sc_int<32>> op1;
     sc_in<sc_int<32>> op2;
     // sc_in<sc_int<32>> value;
-    sc_in<sc_int<4>> opcode;
-    sc_out<sc_int<1>> confirmPC;
+    sc_in<sc_uint<4>> opcode;
+    sc_out<sc_uint<1>> confirmPC;
     // sc_out<sc_int<5>> resultPC;
     sc_out<sc_int<32>> result;
 
     void compute() {
-        confirmPC.write(0);
+        // confirmPC.write(0);
         sleep(1);
         std::cout << "+%$ ULA +%$" << std::endl;
-        std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
-        std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
+        std::cout << "opcode " << std::bitset<4>(opcode.read()) << std::endl;
         int x = opcode.read();
+        // std::cout << "opcode como um inteiro " << x << std::endl;
+        //std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
+        //std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
         if(x == 1){
             result.write(op1.read() & op2.read());
         }else if(x == 2){
@@ -26,7 +28,7 @@ SC_MODULE(alu) {
         }else if(x == 3){
             result.write(op1.read() ^ op2.read());
         }else if(x == 4){
-            result.write(!op1.read());
+            result.write(~op1.read());
         }else if(x == 5){
             result.write(op1.read() == op2.read());
         }else if(x == 6){
@@ -36,6 +38,7 @@ SC_MODULE(alu) {
         }else if(x == 9){
             result.write(op1.read());
         }else if(x == 10){
+            std::cout << "DEEEEEEEEEEEEEEZ" << std::endl;
             confirmPC.write(1);
         }else if(x == 11){
             if(op1.read()< 0){
@@ -60,7 +63,7 @@ SC_MODULE(alu) {
             w = w - w0;
             result.write(z + w); 
         }
-        std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;              
+        //std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;              
                 
         // switch (opcode.read()) {
         //     case 1: // and

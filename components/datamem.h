@@ -8,7 +8,7 @@
 //[00000]
 SC_MODULE(dataMem){
     sc_in<bool> clk;
-    sc_in<sc_int<4>> opcode;
+    sc_in<sc_uint<4>> opcode;
     sc_in<sc_int<10>> memAddr;
     sc_in<sc_int<32>> store_value;
     // sc_out<sc_int<4>> opcode;

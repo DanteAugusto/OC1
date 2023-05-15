@@ -57,12 +57,10 @@ SC_MODULE(instruction_memory) {
     }
 
     void inst_put(){
-        std::cout << "era para ter escrito:       " << std::bitset<25>(write_inst.read()) 
-        << " no endereço " << std::bitset<25>(last)  << std::endl;
+        std::cout << "era para ter escrito:       " << std::bitset<25>(write_inst.read()) << " no endereço " << std::bitset<25>(last)  << std::endl;
         if(sigWriteIM.read()){
             inst[last] = write_inst.read();
-            std::cout << "escreveu uma palavra:       " << std::bitset<25>(inst[last]) 
-            << " no endereço " << std::bitset<25>(last)  << std::endl;
+            std::cout << "escreveu uma palavra:       " << std::bitset<25>(inst[last]) << " no endereço " << std::bitset<25>(last)  << std::endl;
             last = last + 1;
         }
     }
