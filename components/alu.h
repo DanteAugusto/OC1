@@ -13,7 +13,7 @@ SC_MODULE(alu) {
     sc_out<sc_int<32>> result;
 
     void compute() {
-        // confirmPC.write(0);
+        confirmPC.write(0);
         sleep(1);
         std::cout << "+%$ ULA +%$" << std::endl;
         std::cout << "opcode " << std::bitset<4>(opcode.read()) << std::endl;
@@ -38,7 +38,7 @@ SC_MODULE(alu) {
         }else if(x == 9){
             result.write(op1.read());
         }else if(x == 10){
-            std::cout << "DEEEEEEEEEEEEEEZ" << std::endl;
+            // std::cout << "DEEEEEEEEEEEEEEZ" << std::endl;
             confirmPC.write(1);
         }else if(x == 11){
             if(op1.read()< 0){
@@ -54,13 +54,15 @@ SC_MODULE(alu) {
             int y = op1.read();
             int y0 = (y >> 16) << 16;
             y = y - y0;
-            result.write(x + y); 
+            std::cout << "wrih " << std::bitset<32>(a + y) << std::endl;
+            result.write(a + y); 
         }else if(x == 14){
             int z = op1.read();
             z = (z >> 16) << 16;
             int w = op2.read();
             int w0 = (w >> 16) << 16;
             w = w - w0;
+            std::cout << "wril " << std::bitset<32>(z + w) << std::endl;
             result.write(z + w); 
         }
         //std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;              

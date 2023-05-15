@@ -27,19 +27,6 @@ SC_MODULE(pc){
             // std::cout << "bubble " <<regbubble << std::endl;
         }
     }
-    void lowbubble(){
-        if(clk.read() == 1){
-            if(regbubble > 0){
-                // std::cout << "------------------------> o bubble é "<<regbubble << std::endl;
-                regbubble = regbubble - 1;
-                bubbleOut.write(1);
-            }else{
-                if(isjump.read() == 0)bubbleOut.write(0);
-            }
-        }else{
-            if(isjump.read() == 0)bubbleOut.write(0);
-        }
-    }
     void jumps(){
         if(clk.read() == 1){
             sleep(1);
@@ -201,9 +188,14 @@ SC_MODULE(pc){
             }else{
                 std::cout << "é jump! " << isjump.read() << std::endl;
                 bubbleOut.write(1);
-                regbubble = regbubble - 1;
+                if(regbubble > 0){
+                    // std::cout << "------------------------> o bubble é "<<regbubble << std::endl;
+                    regbubble = regbubble - 1;
+                }
                 sleep(5);
             }
+            if(isjump.read() == 0)bubbleOut.write(0);
+            
         }
     }
 
@@ -216,8 +208,6 @@ SC_MODULE(pc){
         SC_METHOD(hazards);
 		sensitive << clk;
         SC_METHOD(jumps);
-		sensitive << clk;
-        SC_METHOD(lowbubble);
 		sensitive << clk;
         SC_METHOD(spit);
 		sensitive << clk;           
