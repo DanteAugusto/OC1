@@ -64,6 +64,7 @@ SC_MODULE(pc){
                 std::bitset<25> instruc = std::bitset<25>(inst1.read());
                 // std::cout << "a instrução é " << instruc << std::endl;
                 std::bitset<25> instruc2 = std::bitset<25>(inst2.read());
+                // std::cout << "a próxima instrução é " << instruc2 << std::endl;
                 std::bitset<25> instruc3 = std::bitset<25>(inst3.read());
                 std::bitset<25> instruc4 = std::bitset<25>(inst4.read());
                 unsigned int opc1 = 0;
@@ -114,9 +115,11 @@ SC_MODULE(pc){
                         in1op2 |= (instruc2[24-i] ? 1 : 0) << (4-(i-4));        
                     }
                 }
+                // std::cout << "isso " << outinst1 << " é igual a isso " <<in1op2<< " ?" << std::endl;
                 if((outinst1 == in1op2) && 
                 ((opc1 > 0 && opc1 < 8) || opc1 == 13 || opc1 == 14) &&
                 ((opc2 > 0 && opc2 < 8) || opc2 == 11 || opc2 == 12)){
+                    // std::cout << "É BOLHA PORRA" << std::endl;
                     regbubble = 1;
                 }
                 if((outinst1 == in2op2) && 

@@ -9,6 +9,7 @@
 SC_MODULE(regbs){
     sc_in<bool> clk;
     sc_uint<32> regs[32];
+    sc_uint<4> opcodereg;
     
     // sc_in<sc_uint<4>> opcode;
     sc_in<sc_uint<5>> op1;
@@ -35,21 +36,21 @@ SC_MODULE(regbs){
         if(clk.read() == 0){
             sleep(1);
             std::cout << "/// BASE DE REGISTRADORES (SAÍDAS)///" << std::endl;
-            std::cout << "opcode da ULA " << std::bitset<4>(opcode.read()) << std::endl;
+            std::cout << "opcode" << std::bitset<4>(opcodereg) << std::endl;
             std::cout << "vai atualizar o endereço " << std::bitset<5>(posUla.read()) << " para " << std::bitset<32>(ula_result.read()) << std::endl;
-            std::cout << std::endl;
-            sleep(1);
-            if(((opcode.read() > 0 && opcode.read() < 8) || opcode.read() == 13 
-                    || opcode.read() == 14)){
-                std::cout << "TÁ SALVANDO HEIN" << std::endl;
+            if(((opcodereg > 0 && opcodereg < 8) || opcodereg == 13 
+                    || opcodereg == 14)){
+                // std::cout << "TÁ SALVANDO HEIN" << std::endl;
                 regs[posUla.read()] = ula_result.read();
             }
             if(loadflag.read()==1 && 
                (loadpoint.read() != posUla.read() || 
-               !((opcode.read() > 0 && opcode.read() < 8) || opcode.read() == 0b1101 
+               !((opcodereg > 0 && opcodereg < 8) || opcodereg == 0b1101 
                 || opcode.read() == 0b1110))){
                 regs[loadpoint.read()] = load.read();
             }
+            std::cout << std::endl;
+            sleep(1);
         }       
 
     }
@@ -57,16 +58,20 @@ SC_MODULE(regbs){
         if(clk.read()==1){
             opout1.write(regs[op1.read()]);
             opout2.write(regs[op2.read()]);
-            sleep(1);
-            std::cout << "/// BASE DE REGISTRADORES (ENTRADAS)///" << std::endl;
-            std::cout << "vai atualizar o endereço " << std::bitset<32>(opout1.read()) << std::endl;
-            std::cout << "vai atualizar o endereço " << std::bitset<32>(opout2.read()) << std::endl;
-            std::cout << std::endl;
-            sleep(1);
+            opcodereg = opcode.read();
+            // sleep(1);
+            // std::cout << "/// BASE DE REGISTRADORES (ENTRADAS)///" << std::endl;
+            // std::cout << "opout 1 " << std::bitset<32>(regs[op1.read()]) << std::endl;
+            // std::cout << "opout 2 " << std::bitset<32>(regs[op2.read()]) << std::endl;
+            // std::cout << "op 1 " << std::bitset<5>(op1.read()) << std::endl;
+            // std::cout << "op 2 " << std::bitset<5>(op2.read()) << std::endl;            
+            // std::cout << std::endl;
+            // sleep(1);
         }
             
     }
     SC_CTOR(regbs) {
+        opcodereg = 0;
         SC_METHOD(save);
 		sensitive << clk;        
         SC_METHOD(get);

@@ -22,7 +22,7 @@ SC_MODULE(bufferIfId){
             //std::cout << "entra aqui?" << std::endl;
             //std::cout << "instOut (dataOut do IM):       " << std::bitset<25>(instOut.read()) << std::endl;
             //std::cout << std::endl;
-            sleep(1);
+            // sleep(1);
         }
     }
     void registr(){

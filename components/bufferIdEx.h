@@ -26,25 +26,25 @@ SC_MODULE(bufferIdEx){
     void spit(){
         if(clk.read() == 1){
             sleep(1);
-            std::cout << "~~~~ BUFFER IDEX (SAÍDAS)~~~~" << std::endl;
+            // std::cout << "~~~~ BUFFER IDEX (SAÍDAS)~~~~" << std::endl;
 
             instOut.write(reginst);
-            op1Out.write(regop1);
+            op1Out.write(op1.read());
             sc_uint<4> opcd = reginst >> 21;
             opcode.write(opcd);
-            std::cout << "opcode  " << std::bitset<4>(opcode.read()) << std::endl;
+            // std::cout << "opcode  " << std::bitset<4>(opcode.read()) << std::endl;
             if(opcd == 13 || opcd == 14){
                 std::bitset<25> instruc = std::bitset<25>(inst.read());
                 unsigned int x = 0;
                 for(int i = 9; i < 25; i++){
                     x |= (instruc[24-i] ? 1 : 0) << (15-(i-9));        
                 }
-                std::cout << "x do write " << std::bitset<16>(x) << std::endl;
+                // std::cout << "x do write " << std::bitset<16>(x) << std::endl;
                 x = (x << 16) + x;
-                std::cout << "x duplicado do write " << std::bitset<32>(x) << std::endl;
+                // std::cout << "x duplicado do write " << std::bitset<32>(x) << std::endl;
                 op2Out.write(x);
             }else{
-                op2Out.write(regop2);
+                op2Out.write(op2.read());
             }
             int y = 0;
             int z = 0;
@@ -64,24 +64,24 @@ SC_MODULE(bufferIdEx){
             }
             PCadd.write(y);
             posresult.write(z);
-            std::cout << "instrução  " << std::bitset<25>(reginst) << std::endl;
+            // std::cout << "instrução  " << std::bitset<25>(reginst) << std::endl;
             //std::cout << "primeiro operando " << std::bitset<32>(op1Out.read()) << std::endl;
             //std::cout << "segundo operando " << std::bitset<32>(op2Out.read()) << std::endl;
-            std::cout << std::endl;
+            // std::cout << std::endl;
             // sleep(1);
         }
     }
     void registr(){
         if(clk.read() == 0){
             reginst = inst.read();
-            regop1 = op1.read();
-            regop2 = op2.read();
+            // regop1 = op1.read();
+            // regop2 = op2.read();
             // sleep(1);
-            std::cout << "~~~~ BUFFER IDEX (ENTRADAS) ~~~~" << std::endl;
-            std::cout << "instrução  " << std::bitset<25>(inst.read()) << std::endl;
-            std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
-            std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
-            std::cout << std::endl;            
+            // std::cout << "~~~~ BUFFER IDEX (ENTRADAS) ~~~~" << std::endl;
+            // std::cout << "instrução  " << std::bitset<25>(inst.read()) << std::endl;
+            // std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
+            // std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
+            // std::cout << std::endl;            
             // sleep(1);
             ////std::cout << "Clock not rising edge detected at " << sc_time_stamp() << std::endl;
             ////std::cout << "reginst:       " << std::bitset<25>(reginst) << std::endl;

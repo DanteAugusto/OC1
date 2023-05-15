@@ -209,7 +209,7 @@ int sc_main(int argc, char* argv[]) {
     std::vector<bool> inst_code;
     while (command != "0") {
         // Prompt the user for input
-        std::cout << "Enter command (add, sub, and, or, slt, lw, sw, beq, j, jn, jz wrih, wril): ";
+        std::cout << "Enter command (add, sub, and, or, slt, lw, sw, beq, j, jn, jz wrih, wril): " << std::endl;
         std::getline(std::cin, command);
         //std::cout << command << std::endl;
         std::vector<std::string> tokens = tokenize(command);
