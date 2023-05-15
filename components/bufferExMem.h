@@ -8,22 +8,22 @@
 //[00000]
 SC_MODULE(bufferExMem){
     sc_in<bool> clk;
-    sc_in<sc_int<25>> inst;
-    sc_in<sc_int<32>> ula_result;
+    sc_in<sc_uint<25>> inst;
+    sc_in<sc_uint<32>> ula_result;
     // sc_out<sc_int<4>> opcode;
-    sc_int<25> reginst;
-    sc_int<25> regula_result;
+    sc_uint<25> reginst;
+    sc_uint<25> regula_result;
     
-    sc_out<sc_int<10>> memAddr;
-    sc_out<sc_int<4>> opcode;
-    sc_out<sc_int<5>> pointerOut;
-    sc_out<sc_int<25>> instOut;
+    sc_out<sc_uint<10>> memAddr;
+    sc_out<sc_uint<4>> opcode;
+    sc_out<sc_uint<5>> pointerOut;
+    sc_out<sc_uint<25>> instOut;
 
 
     void spit(){
         if(clk.read() == 1){
             instOut.write(reginst);            
-            sc_int<4> x = reginst >> 21;
+            sc_uint<4> x = reginst >> 21;
             opcode.write(x);
             int y = 0;
             int z = 0;

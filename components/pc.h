@@ -8,12 +8,12 @@
 //[00000]
 SC_MODULE(pc){
     sc_in<bool> clk;
-    sc_in<sc_int<1>> isjump;
-    sc_in<sc_int<5>> jump;
-    sc_in<sc_int<25>> inst1;
-    sc_in<sc_int<25>> inst2;
-    sc_in<sc_int<25>> inst3;
-    sc_in<sc_int<25>> inst4;
+    sc_in<sc_uint<1>> isjump;
+    sc_in<sc_uint<5>> jump;
+    sc_in<sc_uint<25>> inst1;
+    sc_in<sc_uint<25>> inst2;
+    sc_in<sc_uint<25>> inst3;
+    sc_in<sc_uint<25>> inst4;
     sc_uint<2> regbubble;
     sc_uint<5> regpointer;
     sc_out<sc_uint<1>> bubbleOut;
@@ -27,23 +27,13 @@ SC_MODULE(pc){
             // std::cout << "bubble " <<regbubble << std::endl;
         }
     }
-    void lowbubble(){
-        if(clk.read() == 1){
-            if(regbubble > 0){
-                // std::cout << "------------------------> o bubble é "<<regbubble << std::endl;
-                regbubble = regbubble - 1;
-                bubbleOut.write(1);
-            }else{
-                if(isjump.read() == 0)bubbleOut.write(0);
-            }
-        }else{
-            if(isjump.read() == 0)bubbleOut.write(0);
-        }
-    }
     void jumps(){
         if(clk.read() == 1){
+            // sleep(1);
+            // std::cout << "jumps " << std::endl;
+            // std::cout << "é jump? " << isjump.read() << std::endl;
             if(isjump.read() == 1){
-                // std:cout << "é jump?" << std::endl;
+                // std:cout << "é jump!" << std::endl;
                 std::bitset<25> instruc = std::bitset<25>(inst1.read());
                 //0001001000001100010            
                 // ld pointerOut memAddr
@@ -66,6 +56,8 @@ SC_MODULE(pc){
 
     void hazards(){
         if(clk.read() == 1){
+            // sleep(1);
+            // std::cout << "hazards " << std::endl;
             // std::cout << "é jump? " << isjump.read() << std::endl;
             if(regbubble == 0 && isjump.read() == 0){
                 // std::cout << "regbuuble e isjump são falsos?" << std::endl;
@@ -188,20 +180,22 @@ SC_MODULE(pc){
                 // std::cout << "uma linha antes do incremento" << std::endl;
                 // std::cout << "antes do incremento: " << regpointer <<std::endl;
                 if(inst1.read()!= 0){
-                    std::cout << "que instrução doida é essa? " << std::bitset<25>(inst1.read()) << std::endl;
+                    // std::cout << "que instrução doida é essa? " << std::bitset<25>(inst1.read()) << std::endl;
                     // std::cout << "você entrou aqui?" << std::endl;
-                    regpointer = regpointer +1;
-                    if(opc1 == 10){
-                        regpointer = outinst1;
-                    }
+                    regpointer = regpointer +1;                    
                 }
                 // std::cout << "depois do incremento: " << regpointer <<std::endl;
             }else{
-                std::cout << "é jump? " << isjump.read() << std::endl;
+                // std::cout << "é jump! " << isjump.read() << std::endl;
                 bubbleOut.write(1);
-                regbubble = regbubble - 1;
-                sleep(5);
+                if(regbubble > 0){
+                    // std::cout << "------------------------> o bubble é "<<regbubble << std::endl;
+                    regbubble = regbubble - 1;
+                }
+                // sleep(5);
             }
+            if(isjump.read() == 0)bubbleOut.write(0);
+            
         }
     }
 
@@ -214,8 +208,6 @@ SC_MODULE(pc){
         SC_METHOD(hazards);
 		sensitive << clk;
         SC_METHOD(jumps);
-		sensitive << clk;
-        SC_METHOD(lowbubble);
 		sensitive << clk;
         SC_METHOD(spit);
 		sensitive << clk;           

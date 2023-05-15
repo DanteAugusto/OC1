@@ -4,21 +4,23 @@
 #include<unistd.h>
 //[0000][100100][000100]
 SC_MODULE(alu) {
-    sc_in<sc_int<32>> op1;
-    sc_in<sc_int<32>> op2;
+    sc_in<sc_uint<32>> op1;
+    sc_in<sc_uint<32>> op2;
     // sc_in<sc_int<32>> value;
-    sc_in<sc_int<4>> opcode;
-    sc_out<sc_int<1>> confirmPC;
+    sc_in<sc_uint<4>> opcode;
+    sc_out<sc_uint<1>> confirmPC;
     // sc_out<sc_int<5>> resultPC;
-    sc_out<sc_int<32>> result;
+    sc_out<sc_uint<32>> result;
 
     void compute() {
         confirmPC.write(0);
-        sleep(1);
+        // sleep(1);
         std::cout << "+%$ ULA +%$" << std::endl;
-        std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
-        std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
+        std::cout << "opcode " << std::bitset<4>(opcode.read()) << std::endl;
         int x = opcode.read();
+        // std::cout << "opcode como um inteiro " << x << std::endl;
+        //std::cout << "primeiro operando " << std::bitset<32>(op1.read()) << std::endl;
+        //std::cout << "segundo operando " << std::bitset<32>(op2.read()) << std::endl;
         if(x == 1){
             result.write(op1.read() & op2.read());
         }else if(x == 2){
@@ -26,7 +28,7 @@ SC_MODULE(alu) {
         }else if(x == 3){
             result.write(op1.read() ^ op2.read());
         }else if(x == 4){
-            result.write(!op1.read());
+            result.write(~op1.read());
         }else if(x == 5){
             result.write(op1.read() == op2.read());
         }else if(x == 6){
@@ -36,6 +38,7 @@ SC_MODULE(alu) {
         }else if(x == 9){
             result.write(op1.read());
         }else if(x == 10){
+            // std::cout << "DEEEEEEEEEEEEEEZ" << std::endl;
             confirmPC.write(1);
         }else if(x == 11){
             if(op1.read()< 0){
@@ -47,20 +50,30 @@ SC_MODULE(alu) {
             }
         }else if(x == 13){
             int a = op2.read();
-            a = (a >> 16) << 16;
             int y = op1.read();
+            std::cout << "primeira parte antes " << std::bitset<32>(y) << std::endl;
+            std::cout << "segunda parte antes " << std::bitset<32>(a) << std::endl;
+            a = (a >> 16) << 16;
             int y0 = (y >> 16) << 16;
             y = y - y0;
-            result.write(x + y); 
+            std::cout << "primeira parte " << std::bitset<32>(y) << std::endl;
+            std::cout << "segunda parte " << std::bitset<32>(a) << std::endl;
+            std::cout << "wrih " << std::bitset<32>(a + y) << std::endl;
+            result.write(a + y); 
         }else if(x == 14){
             int z = op1.read();
-            z = (z >> 16) << 16;
             int w = op2.read();
+            std::cout << "primeira parte antes " << std::bitset<32>(z) << std::endl;
+            std::cout << "segunda parte antes " << std::bitset<32>(w) << std::endl;
+            z = (z >> 16) << 16;
             int w0 = (w >> 16) << 16;
             w = w - w0;
+            std::cout << "primeira parte " << std::bitset<32>(z) << std::endl;
+            std::cout << "segunda parte " << std::bitset<32>(w) << std::endl;
+            std::cout << "wril " << std::bitset<32>(z + w) << std::endl;
             result.write(z + w); 
         }
-        std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;              
+        //std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;              
                 
         // switch (opcode.read()) {
         //     case 1: // and
