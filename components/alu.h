@@ -1,7 +1,11 @@
 #include <systemc.h>
 #include <iostream>
-#include <bitset> 
+#include <bitset>
 #include<unistd.h>
+
+#define PRINT(expr) cout << "[!] " #expr " = " << (expr) << endl
+#define EXPR(expr) #expr " = " << (expr) << "; "
+
 //[0000][100100][000100]
 SC_MODULE(alu) {
     sc_in<sc_uint<32>> op1;
@@ -41,7 +45,7 @@ SC_MODULE(alu) {
             // std::cout << "DEEEEEEEEEEEEEEZ" << std::endl;
             confirmPC.write(1);
         }else if(x == 11){
-            if(op1.read()< 0){
+            if((sc_int<32>) op1.read() < 0){
                 confirmPC.write(1);
             }
         }else if(x == 12){
@@ -49,32 +53,32 @@ SC_MODULE(alu) {
                 confirmPC.write(1);
             }
         }else if(x == 13){
-            int a = op2.read();
-            int y = op1.read();
+            sc_uint<32> a = op2.read();
+            sc_uint<32> y = op1.read();
             std::cout << "primeira parte antes " << std::bitset<32>(y) << std::endl;
             std::cout << "segunda parte antes " << std::bitset<32>(a) << std::endl;
             a = (a >> 16) << 16;
-            int y0 = (y >> 16) << 16;
+            sc_uint<32> y0 = (y >> 16) << 16;
             y = y - y0;
             std::cout << "primeira parte " << std::bitset<32>(y) << std::endl;
             std::cout << "segunda parte " << std::bitset<32>(a) << std::endl;
             std::cout << "wrih " << std::bitset<32>(a + y) << std::endl;
-            result.write(a + y); 
+            result.write(a + y);
         }else if(x == 14){
-            int z = op1.read();
-            int w = op2.read();
+            sc_uint<32> z = op1.read();
+            sc_uint<32> w = op2.read();
             std::cout << "primeira parte antes " << std::bitset<32>(z) << std::endl;
             std::cout << "segunda parte antes " << std::bitset<32>(w) << std::endl;
             z = (z >> 16) << 16;
-            int w0 = (w >> 16) << 16;
+            sc_uint<32> w0 = (w >> 16) << 16;
             w = w - w0;
             std::cout << "primeira parte " << std::bitset<32>(z) << std::endl;
             std::cout << "segunda parte " << std::bitset<32>(w) << std::endl;
             std::cout << "wril " << std::bitset<32>(z + w) << std::endl;
-            result.write(z + w); 
+            result.write(z + w);
         }
-        //std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;              
-                
+        //std::cout << "resultado " << std::bitset<32>(result.read()) << std::endl;
+
         // switch (opcode.read()) {
         //     case 1: // and
         //         // cout << "AND" <<endl;
@@ -111,7 +115,7 @@ SC_MODULE(alu) {
         //         result.write(op1.read() - op2.read());
         //         //zero.write(result.read() == 0);
         //         break;
-        //     case 9: // st 
+        //     case 9: // st
         //         // cout << "ST" <<endl;
         //         result.write(op1.read());
         //         //zero.write(result.read() == 0);
@@ -138,24 +142,24 @@ SC_MODULE(alu) {
         //         int y = op1.read();
         //         int y0 = (y >> 16) << 16;
         //         y = y - y0;
-        //         result.write(x + y); 
+        //         result.write(x + y);
         //         // zero.write(result.read() == 0);
         //         break;
         //     case 14: // wril
-        //         // cout << "WRIL" <<endl;                
+        //         // cout << "WRIL" <<endl;
         //         int z = op1.read();
         //         z = (z >> 16) << 16;
         //         int w = op2.read();
         //         int w0 = (w >> 16) << 16;
         //         w = w - w0;
-        //         result.write(z + w); 
+        //         result.write(z + w);
         //         // zero.write(result.read() == 0);
         //         break;
         //     default:
         //         // cout << "DEFAULT" <<endl;
         //         // result.write(0);
         //         break;
-        
+
     }
 
     SC_CTOR(alu) {
