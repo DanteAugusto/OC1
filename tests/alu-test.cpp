@@ -106,8 +106,6 @@ int sc_main(int argc, char* argv[]) {
 
     Test test;
 
-    test.skip = true;
-
     test.run(
         "binary and",
         // GIVEN
@@ -242,8 +240,6 @@ int sc_main(int argc, char* argv[]) {
         0,
         43895739
     );
-
-    test.skip = false;
 
     test.result.write(2345);
     test.run(
